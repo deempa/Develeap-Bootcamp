@@ -84,11 +84,11 @@ function zip_file ()
 {
     local file_name="$1"
     is_file_zipped "${file_name}"
-    boolean_is_file_zipped=$?
-    dir_name=$(dirname $file_name)
-    basename=$(basename $file_name)
-    new_file_name="fc-$(basename "$1")"
-    new_file_path="${dir_name}/${new_file_name}"
+    local boolean_is_file_zipped=$?
+    local dir_name=$(dirname $file_name)
+    local basename=$(basename $file_name)
+    local new_file_name="fc-$(basename "$1")"
+    local new_file_path="${dir_name}/${new_file_name}"
 
     if [[ $boolean_is_file_zipped -eq 1 ]]; then
         zip -qm "${new_file_path}" "${file_name}" 
