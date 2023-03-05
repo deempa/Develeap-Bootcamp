@@ -38,6 +38,13 @@ function is_file_zipped ()
 
 function zip_directory_without_recursive ()
 {
+    local folder_path="$1"
+    local folder_contents=$(find "${folder_path}" -mindepth 1 -maxdepth 1)
+
+    if [[ -z "${folder_contents}" ]]; then
+        return
+    fi
+    
     for f in $1/*
     do
         local file_type=$(file $f | cut -d' ' -f 2)
@@ -49,7 +56,14 @@ function zip_directory_without_recursive ()
 }
 
 function zip_directory_with_recursive ()
-{
+{   
+    local folder_path="$1"
+    local folder_contents=$(find "${folder_path}" -mindepth 1 -maxdepth 1)
+
+    if [[ -z "${folder_contents}" ]]; then
+        return
+    fi
+
     for f in $1/*
     do
         local file_type=$(file "${f}" | cut -d' ' -f 2)
@@ -70,11 +84,12 @@ function zip_file ()
     basename=$(basename $file_name)
     new_file_name="fc-$(basename "$1")"
     new_file_path="${dir_name}/${new_file_name}"
+
     if [[ $boolean_is_file_zipped -eq 1 ]]; then
         zip -qm "${new_file_path}" "${file_name}" 
     elif [[ $boolean_is_file_zipped -eq 0 ]]; then
         if [[ "${basename}" == fc-* ]]; then
-            continue
+            true
         else
             mv "${file_name}" "${new_file_path}"
             touch "${new_file_path}"
@@ -89,7 +104,7 @@ function start_zipping()
 
     if [[ $recursive == true ]]; then
         if [[ "${file_type}" == "directory" ]]; then
-            zip_directory_with_recursive "${file_name}"
+                zip_directory_with_recursive "${file_name}"            
         else 
             zip_file "${file_name}"
         fi
