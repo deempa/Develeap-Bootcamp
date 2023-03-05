@@ -6,7 +6,12 @@ timeout_in_hours=48
 # Set default recursive flag to false
 recursive=false
 
-while getopts 'rt:' flag; do
+function usage()
+{
+    echo "freespace [-r] [-t ###] file [file...]"
+}
+
+while getopts ':r:t' flag; do
   case "${flag}" in
     r) recursive=true ;;
     t) timeout_in_hours=${OPTARG} ;;
@@ -26,7 +31,7 @@ function is_file_zipped ()
     local file_type=$(file "$1" | cut -d' ' -f 2)
     local basename=$(basename "${file_name}")
 
-    if [[ "${file_type}" =~ [Zz][Ii][Pp] ]]; then
+    if [[ "${file_type}" =~ [Zz][Ii][Pp] || "${file_type}" == "compress'd" ]]; then
         if [[ "${basename}" == fc-* && $(find ${file_name} -mmin +${timeout_in_hours} -print) ]]; then
                 rm "${file_name}"
         fi
@@ -116,6 +121,10 @@ function start_zipping()
         fi
     fi
 }
+
+if [[ $# -eq 0 ]]; then
+  usage
+fi
 
 for f_name in "$@"
 do
