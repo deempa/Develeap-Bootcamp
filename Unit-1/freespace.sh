@@ -17,7 +17,7 @@ while getopts 'rt:' flag; do
     r) RECURSIVE=true ;;
     t) TIMEOUT=${OPTARG} ;;
     *)
-        echo "Usage: $(basename "$0") [-r] [-t timeout] file [file...]" >&2
+        usage
         exit 1
       ;;
   esac
