@@ -1,20 +1,21 @@
 #!/bin/bash
 
 # Set default timeout
-timeout_in_hours=48
+TIMEOUT=48
 
 # Set default recursive flag to false
-recursive=false
+
+RECURSIVE=false
 
 function usage()
 {
     echo "freespace [-r] [-t ###] file [file...]"
 }
 
-while getopts ':r:t' flag; do
+while getopts 'rt:' flag; do
   case "${flag}" in
-    r) recursive=true ;;
-    t) timeout_in_hours=${OPTARG} ;;
+    r) RECURSIVE=true ;;
+    t) TIMEOUT=${OPTARG} ;;
     *)
         echo "Usage: $(basename "$0") [-r] [-t timeout] file [file...]" >&2
         exit 1
@@ -23,16 +24,15 @@ while getopts ':r:t' flag; do
 done
 shift $((OPTIND-1))
 
-
-
 function is_file_zipped ()
 {
     local file_name=$1
     local file_type=$(file "$1" | cut -d' ' -f 2)
     local basename=$(basename "${file_name}")
+    ((timeout_in_minutes = TIMEOUT * 60))
 
     if [[ "${file_type}" =~ [Zz][Ii][Pp] || "${file_type}" == "compress'd" ]]; then
-        if [[ "${basename}" == fc-* && $(find ${file_name} -mmin +${timeout_in_hours} -print) ]]; then
+        if [[ "${basename}" == fc-* && $(find ${file_name} -mmin +${timeout_in_minutes} -print) ]]; then
                 rm "${file_name}"
         fi
         return 0
@@ -107,7 +107,7 @@ function start_zipping()
     local file_name="$1"
     local file_type=$(file "${file_name}" | cut -d' ' -f 2)
 
-    if [[ $recursive == true ]]; then
+    if [[ "${RECURSIVE}" == true ]]; then
         if [[ "${file_type}" == "directory" ]]; then
                 zip_directory_with_recursive "${file_name}"            
         else 
