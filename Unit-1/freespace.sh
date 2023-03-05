@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 timeout_in_hours=48 # default timeout 
 recursive=false
 
@@ -17,20 +16,26 @@ while getopts 'rt:' flag; do
 done
 shift $((OPTIND-1))
 
+function usage()
+{
+    echo "freespace [-r] [-t ###] file [file...]"
+}
+
 
 function is_file_zipped ()
 {
-    file_name=$1
-    file_type=$(file $1 | cut -d' ' -f 2)
-    echo $file_type
-    #timeout_in_seconds=$(($timeout_in_hours * 60))
+    local file_name=$1
+    local file_type=$(file $1 | cut -d' ' -f 2)
 
     if [[ ${file_type} =~ [Zz][Ii][Pp] ]]; then
-        if [ "$file_name" == fc-* ] && [ $(find "$file_name" -mtime +2 -print) ]; then
-            rm "$file_name"
-        fi
+        # if [ "$file_name" == fc-* ] && [ $(find "$file_name" -mtime +2 -print) ]; then
+        #     rm "$file_name"
+        # fi
         return 0
     else
+        # if [ "$file_name" == fc-* ] && [ $(find "$file_name" -mtime +2 -print) ]; then
+        #     rm "$file_name"
+        # fi
         return 1
     fi
 }
@@ -39,7 +44,10 @@ function zip_directory_without_recursive ()
 {
     for f in $1/*
     do
-        echo $f
+        local file_type=$(file $f | cut -d' ' -f 2)
+        if [[ $file_type == "directory" ]]; then
+            continue
+        fi
         zip_file $f
     done
 }
@@ -58,44 +66,59 @@ function zip_directory_with_recursive ()
 
 function zip_file ()
 {
-    is_file_zipped $1
+    local file_name="$1"
+    is_file_zipped "${file_name}"
     boolean_is_file_zipped=$?
-    if [[ $boolean_is_file_zipped -eq 1 ]]; then # if file is not compressed
-        base_name=$(basename ${1})
-        base_name_with_fc="fc-${base_name}"
-        zip -d "fc-${base_name}" ${1}
+    dir_name=$(dirname $file_name)
+    new_file_name="fc-$(basename "$1")"
+    new_file_path="${dir_name}/${new_file_name}"
+    # echo ${file_name}
+    # echo $new_file_path
+    #echo dirname- $dir_name/fc-$basename
+    # echo basename- $basename
+    if [[ $boolean_is_file_zipped -eq 1 ]]; then
+        zip "${new_file_path}" "${file_name}"
     else
-        text_after_fc=$(echo $1 | cut -d'-' -f2-)
-        mv ${1} "fc-${text_after_fc}"
-        touch "fc-${text_after_fc}"
+        exit
     fi
+    # is_file_zipped $1
+    # boolean_is_file_zipped=$?
+    # dir_name=$(dirname $1)
+    # if [[ $boolean_is_file_zipped -eq 1 ]]; then # if file is not compressed
+    #     zip "fc-${1}" ${1}
+    # else
+
+    #     mv "${1}" "fc-${text_after_fc}"
+    #     touch "fc-${text_after_fc}"
+    # fi
 }
 
 function start_zipping()
 {
-    file_name=$1
-    echo $file_name
-    #file_full_path=$(realpath $file_name)
-    file_type=$(file $file_name | cut -d' ' -f 2)
+    local file_name="$1"
+    local file_type=$(file "$file_name" | cut -d' ' -f 2)
+
     if [[ $recursive == true ]]; then
         if [[ $file_type == "directory" ]]; then
             zip_directory_with_recursive $file_name
-        else #is not directory
+        else 
             zip_file $file_name
         fi
-    else # recursive is false
+    else 
         if [[ $file_type == "directory" ]]; then
-            echo $file_name
             zip_directory_without_recursive $file_name
         else
-            zip_file $file_name
+            zip_file "${file_name}"
         fi
     fi
 }
 
-for file_name in "$*"
+for f_name in "$@"
 do
-    echo $file_name
-    start_zipping $file_name
+    if [[ -e $f_name ]]; then
+        start_zipping $f_name
+    else
+        echo "${f_name} is not exists!" 
+    fi
 done
 
