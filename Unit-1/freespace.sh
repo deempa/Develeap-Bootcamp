@@ -3,7 +3,6 @@
 timeout_in_hours=48 # default timeout 
 recursive=false
 
-# Flags recognize and save variables.
 while getopts 'rt:' flag; do
   case "${flag}" in
     r) recursive=true ;;
@@ -21,21 +20,18 @@ function usage()
     echo "freespace [-r] [-t ###] file [file...]"
 }
 
-
 function is_file_zipped ()
 {
     local file_name=$1
     local file_type=$(file "$1" | cut -d' ' -f 2)
+    local basename=$(basename "${file_name}")
 
     if [[ "${file_type}" =~ [Zz][Ii][Pp] ]]; then
-        # if [ "$file_name" == fc-* ] && [ $(find "$file_name" -mtime +2 -print) ]; then
-        #     rm "$file_name"
-        # fi
+        if [[ "${basename}" == fc-* && $(find ${file_name} -mmin +${timeout_in_hours} -print) ]]; then
+                rm "${file_name}"
+        fi
         return 0
     else
-        # if [ "$file_name" == fc-* ] && [ $(find "$file_name" -mtime +2 -print) ]; then
-        #     rm "$file_name"
-        # fi
         return 1
     fi
 }
@@ -57,8 +53,8 @@ function zip_directory_with_recursive ()
     for f in $1/*
     do
         local file_type=$(file "${f}" | cut -d' ' -f 2)
-        if [[ "${file_type}" == "directory" ]]; then
-            zip_directory_with_recursive ${f}
+        if [[ "${file_type}" == "directory" && "$(ls -A $1)" ]]; then
+            zip_directory_with_recursive "${f}"
         else
             zip_file "${f}"
         fi
@@ -68,7 +64,6 @@ function zip_directory_with_recursive ()
 function zip_file ()
 {
     local file_name="$1"
-    # local file_path=
     is_file_zipped "${file_name}"
     boolean_is_file_zipped=$?
     dir_name=$(dirname $file_name)
@@ -76,10 +71,14 @@ function zip_file ()
     new_file_name="fc-$(basename "$1")"
     new_file_path="${dir_name}/${new_file_name}"
     if [[ $boolean_is_file_zipped -eq 1 ]]; then
-        zip "${new_file_path}" "${file_name}"
-    else
-        mv "${file_name}" "${new_file_path}"
-        touch "${new_file_path}"
+        zip -qm "${new_file_path}" "${file_name}" 
+    elif [[ $boolean_is_file_zipped -eq 0 ]]; then
+        if [[ "${basename}" == fc-* ]]; then
+            continue
+        else
+            mv "${file_name}" "${new_file_path}"
+            touch "${new_file_path}"
+        fi
     fi
 }
 
