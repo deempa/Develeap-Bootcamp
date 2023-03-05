@@ -35,9 +35,9 @@ function is_file_zipped ()
         if [[ "${basename}" == fc-* && $(find ${file_name} -mmin +${timeout_in_minutes} -print) ]]; then
                 rm "${file_name}"
         fi
-        return 0
-    else
         return 1
+    else
+        return 0
     fi
 }
 
@@ -90,9 +90,9 @@ function zip_file ()
     local new_file_name="fc-$(basename "$1")"
     local new_file_path="${dir_name}/${new_file_name}"
 
-    if [[ $boolean_is_file_zipped -eq 1 ]]; then
+    if [[ $boolean_is_file_zipped -eq 0 ]]; then
         zip -qm "${new_file_path}" "${file_name}" 
-    elif [[ $boolean_is_file_zipped -eq 0 ]]; then
+    elif [[ $boolean_is_file_zipped -eq 1 ]]; then
         if [[ "${basename}" == fc-* ]]; then
             true
         else
