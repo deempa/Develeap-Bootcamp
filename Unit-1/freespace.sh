@@ -1,6 +1,9 @@
 #!/bin/bash
 
-timeout_in_hours=48 # default timeout 
+# Set default timeout
+timeout_in_hours=48
+
+# Set default recursive flag to false
 recursive=false
 
 while getopts 'rt:' flag; do
@@ -8,17 +11,14 @@ while getopts 'rt:' flag; do
     r) recursive=true ;;
     t) timeout_in_hours=${OPTARG} ;;
     *)
-      usage
-      exit 1
+        echo "Usage: $(basename "$0") [-r] [-t timeout] file [file...]" >&2
+        exit 1
       ;;
   esac
 done
 shift $((OPTIND-1))
 
-function usage()
-{
-    echo "freespace [-r] [-t ###] file [file...]"
-}
+
 
 function is_file_zipped ()
 {
