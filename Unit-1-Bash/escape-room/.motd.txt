@@ -1,0 +1,9 @@
+Welcome to the Bash Escape Room!
+================================
+In the following excercise you are requested to move from room to room, starting with `room1/`.
+
+Most of the time the way to pass through a room should be clear, but then again...
+
+Good Luck!
+
+Andrey & the develeap team

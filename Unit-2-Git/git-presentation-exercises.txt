@@ -1,0 +1,131 @@
+Git Presentation Excercises
+===========================
+
+To hand in
+----------
+- Submit your answers in a *.txt file.
+
+Excercise 1 - setting up a local git repository
+-----------------------------------------------
+- create a folder, "FOLDER1"
+- git init
+- look at the .git folder
+
+- create a short file
+- check git status. where is this file in git terms (local-untracked / staged / committed)
+
+- stage the file
+- check git status. where is this file in git terms (local-untracked / staged / committed)
+
+- commit the file
+- check git status. where is this file in git terms (local-untracked / staged / committed)
+
+- change the file
+- check git status. where is this file in git terms (local-untracked / staged / committed)
+
+- stage the file
+- check git status. where is this file in git terms (local-untracked / staged / committed)
+
+- commit the file
+- check git status. where is this file in git terms (local-untracked / staged / committed)
+
+- create another file
+- commit it
+
+- take a look at the git log
+
+Excercise 2 - Surfing the log
+-----------------------------
+- add 3 more commits to your repository (change & commit x 3)
+- list all your commits using git log
+- checkout an old commit
+- examine
+  - the log, with & without --all
+     - where is HEAD? What state is it in?
+     - where is the master branch? can you see it?
+  - the files
+     - are they all there?
+     - what is their content?
+
+- tag your current commit with a memorable name, e.g. "version 1.0"
+- look at the log
+
+- checkout a different commit
+- create a branch at this commit with a reasonable name, e.g. "fix/1"
+- look at the log
+   - where is HEAD? What state is it in? what is it attached to?
+   - where is the master branch? can you see it?
+   - where is the tag you created earlier?
+
+- jump back to master
+- examine
+  - the log, with & without --all
+     - where is HEAD? What state is it in?
+     - where is the master branch? can you see it?
+  - the files
+     - are they all there?
+     - what is their content?
+
+
+Excercise 3 - Working with remote
+---------------------------------
+- create a new, empty, private github repository
+- set it as the origin of your repository
+- push your changes to github
+- change a file
+- commit
+- check git status. where is this file in git terms (local-untracked / staged / committed)
+
+- clone the remote repository into a new folder, "FOLDER2"
+- take a look and compare the git log
+  - in FOLDER1
+  - in FOLDER2
+  - on the remote repository
+- push changes in FOLDER1
+- take a look and compare the git log
+  - in FOLDER1
+  - in FOLDER2
+  - on the remote repository
+- pull remote to FOLDER2
+- take a look and compare the git log
+  - in FOLDER1
+  - in FOLDER2
+  - on the remote repository
+
+Excercise 4 - Remote Branches
+-----------------------------
+- Fork the repository https://github.com/prithvipsingh/branchtutorial.git
+- look at log and graph
+- list the local branches
+- list the remote branches
+- checkout branch h2 and list all remote branches - what is your tracking branch?
+
+Excercise 5 - Branches
+----------------------
+- create a new branch “new-branch”
+- checkout to branch “new-branch”
+- create a  new file “file3.txt” with some text
+- add and commit the file
+- push “new-branch” to origin “new-branch”
+- checkout back to master
+- create a new file “file4.txt” and add some text
+- add and commit “file4.txt”
+- push changes to origin master
+- check in github both branches
+- create a new branch “my-second-branch”
+- rename  “my-second-branch” “temp-branch”
+- push  “temp-branch” to origin
+- delete local  “temp-branch”
+- delete remote  “temp-branch”
+
+Excercise 6 - Merging basics
+----------------------------
+- checkout to master
+- print “Hello” to file1.txt
+- add and commit changes
+- checkout to new-branch
+- print “Hi” to file1.txt
+- try to merge master into new-branch 
+- fix conflicts
+- try again to merge master into new-branch
+

@@ -1,0 +1,21 @@
+1) 
+  a. docker run -d -e MYSQL_ROOT_PASSWORD=123 mysql:5.6
+     docker exec -it 28c6ec5c49e6 bash
+  b. mysql -u root -p 
+     Enter the root password I configure using the environment variable.
+	 select 1;
+
+2)
+  a. docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=123 -p 8877:3306 mysql:5.6
+  b. telnet localhost 8877
+
+3) 
+
+  a+b+c. docker run -d --name mysql -p 8877:3306 -e MYSQL_ROOT_PASSWORD=123 -v mydata:/var/lib/mysql -v "$(pwd)/my.cnf":/etc/mysql/conf.d/mysql.conf -v "$(pwd)/dump.sql":/docker-entrypoint-initdb.d/1.sql mysql:5.6 
+  d. 
+	- use mydb;
+	  select * from SuperHeroes;
+	- insert into SuperHeroes (user_id ,username, first_name, last_name, gender, password, status) values (19 ,"Aquaman", "Jason", "Momoa", "Male", "267f870e4817b6e287da392d29787d27", 1);
+  e. docker container restart mysql
+  f. docker stop mysql
+	 docker rm mysql

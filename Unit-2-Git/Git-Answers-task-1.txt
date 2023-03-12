@@ -1,0 +1,134 @@
+===     Exercise 1 - setting up a local git repository    ===
+
+- mkdir FOLDER1 && cd FOLDER1
+- git init
+- ls -a .git
+
+- echo "my name is lior" > test.txt
+- local-untracked
+
+- git add test.txt
+- staged
+
+- git commit -m "add a sentence with my name"
+- committed
+
+- echo "My name is Lior" >> test.txt
+- local-untracked
+
+- git add test.txt
+- staged
+
+- git commit -m "add a Uppercase letters"
+- committed
+
+- echo "Hello World" > venus.txt
+- git add venus.txt
+  git commit -m "Hello World file"
+
+- git log
+
+===     Exercise 2 - Surfing the log     ===
+
+- echo hello, world >> venus.txt 
+  git add venus.txt 
+  git commit -m "another type of hello world"
+  vim test.txt 
+  git add test.txt 
+  git commit -m "added Title"
+  vim venus.txt 
+  git add venus.txt 
+  git commit -m "added dot on the end of each line"
+
+- git log
+- git checkout 4429ca2
+- git log --all -> gives all logs include after the commit, without --all it give only the old ones.
+- The HEAD is in "detached HEAD" state, it now on commit and not on branch.
+- The master branch is on the lastest commit on his branch, I can see it with the --all flag on git log.
+- the files are all here just becuase I checkout to commit where they already created.
+- Their content is different from the lastest commit in Master branch.
+
+- git tag "v1.0"
+- git log --all --oneline
+
+- git checkout 823d807
+- git branch "feature/1"
+
+- The HEAD is still on detached mode, his on the commit I checkout earlier. (823d807)
+- The master branch is still on the lastest commit (3dfc8f2). I can see it only with --all flag.
+- The tag I created earlier is on the commit that I tagged earlier. (4429ca2)
+
+- git checkout main
+- The HEAD without is one the master branch (main).
+- The master branch is poining to HEAD, i can see it.
+
+- All the files are here, cause I go to the last branch master.
+- All the content is updated.
+
+===     Exercise 3 - Working with remote     ===
+
+- Created a private github repo named - Testing
+- git remote add origin https://github.com/deempa/Testing.git
+- git push --set-upstream origin main
+- echo nana >> venus.txt 
+  git add venus.txt
+  git commit -m "Added nana"
+- Is committed, but not updated in the remote repo. need to push.
+
+- cd .. && mkdir FOLDER2 && cd FOLDER2
+- git clone https://github.com/deempa/Testing.git FOLDER2
+- In FOLDER1, the HEAD is pointing to last commit d8ad252, and the origin main is one commit before.
+  there is also a feature branch on another commit and tag on another commit.
+  In FOLDER2, The HEAD is pointing to main, origin/main, and origin/HEAD. is up to date 
+  but he still dont know about the changes on local repo that not pushed.
+  On the remote repo, is same as FOLDER2 cause it just now pull from there, so it up to date.
+- git push (In FOLDER1)
+- In FOLDER1, the HEAD pointing to main(local) and origin/main(remote) on the last commit and he is up to date and update remote as well.
+  In FOLDER2, nothing happened, its not up to date to remote repo and FOLDER1. still like before.
+  Remote repo is up to date.
+- git pull
+- The three (FOLDER1, FOLDER2, remote) are equal and the same now, they all up to date.
+  FOLDER2 take the changed from the remote that FOLDER1 just pushed. the remote was updated becuase of the push.
+
+===     Exercise 4 - Remote Branches     ===
+
+- Forked on the remote site. (Just clicked the button)
+- git log --all --oneline --graph
+- git branch
+- git branch --remote
+- git checkout h2
+- the tracking branch is origin/h2
+
+===     Excercise 5 - Branches     ===
+
+- git branch new-branch
+- git checkout new-branch
+- echo "nice file" > file3.txt
+- git add file3.txt
+- git commit -m "added text to file"
+- git push -u origin new-branch
+- git checkout master
+- echo "blabla" > file4.txt
+- git add file4.txt 
+- git commit -m "added blabla"
+- git push -u origin master
+- checked in github.
+- git branch my-second-branch
+- git branch -m "my-second-branch" "temp-branch"
+- git push -u origin temp-branch
+- git branch -d temp-branch
+- git push origin -d temp-branch
+
+===     Excercise 6 - Merging basics     ===
+
+- git checkout master
+- echo Hello > file1.txt
+- git add file1.txt
+  git commit -m "added hello"
+- git checkout new-branch
+- echo Hi > file1.txt 
+- git checkout master
+  git merge new-branch
+- Fixed conflicts
+- Add and commited.
+  
